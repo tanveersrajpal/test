@@ -47,6 +47,7 @@ resource "aws_ecs_service" "clearpoint-cluster-service-listapi-app" {
   task_definition = aws_ecs_task_definition.clearpoint_taskdefinition.id
   desired_count   = 2
   launch_type     = "EC2"
+  deployment_minimum_healthy_percent = 50
 }
 
 #--------------------------------------------------------------------------
