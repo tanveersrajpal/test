@@ -7,7 +7,7 @@ resource "aws_launch_configuration" "ecs_launch_config" {
   key_name             = var.ec2_keypair_name
 }
 
-resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
+resource "aws_autoscaling_group" "main-autoscaling-group" {
   name                 = "ListApi-AG-ASE"
   vpc_zone_identifier  = [aws_subnet.prod-subnet-public-1.id, aws_subnet.prod-subnet-public-2.id]
   launch_configuration = aws_launch_configuration.ecs_launch_config.name
@@ -20,20 +20,20 @@ resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
 }
 
 resource "aws_autoscaling_attachment" "autoscaling_group_association" {
-  autoscaling_group_name = aws_autoscaling_group.failure_analysis_ecs_asg.id
-  lb_target_group_arn    = aws_lb_target_group.hello_world.arn
+  autoscaling_group_name = aws_autoscaling_group.main-autoscaling-group.id
+  lb_target_group_arn    = aws_lb_target_group.tg-clearpoint-lb-web.arn
 }
 
 resource "aws_autoscaling_policy" "autoscaling_policy_add_instance" {
-  autoscaling_group_name = aws_autoscaling_group.failure_analysis_ecs_asg.name
+  autoscaling_group_name = aws_autoscaling_group.main-autoscaling-group.name
   name                   = "Step_scaling_up"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
 }
 
-resource "aws_autoscaling_policy" "autoscaling_policy_terminate_intance" {
-  autoscaling_group_name = aws_autoscaling_group.failure_analysis_ecs_asg.name
+resource "aws_autoscaling_policy" "autoscaling_policy_terminate_instance" {
+  autoscaling_group_name = aws_autoscaling_group.main-autoscaling-group.name
   name                   = "Step_scaling_down"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
@@ -51,7 +51,7 @@ resource "aws_cloudwatch_metric_alarm" "autoscaling_policy_action_cpu_alarm_up" 
   threshold           = "70"
 
   dimensions = {
-    AutoScalingGroupName = "${aws_autoscaling_group.failure_analysis_ecs_asg.name}"
+    AutoScalingGroupName = "${aws_autoscaling_group.main-autoscaling-group.name}"
   }
 
   alarm_description = "Scale up by 1 instance if CPU threshold reaches 70% or above average"
@@ -69,9 +69,9 @@ resource "aws_cloudwatch_metric_alarm" "autoscaling_policy_action_cpu_alarm_down
   threshold           = "10"
 
   dimensions = {
-    AutoScalingGroupName = "${aws_autoscaling_group.failure_analysis_ecs_asg.name}"
+    AutoScalingGroupName = "${aws_autoscaling_group.main-autoscaling-group.name}"
   }
 
   alarm_description = "Scale down by 1 instance if CPU threshold reaches 10% or lower average"
-  alarm_actions     = [aws_autoscaling_policy.autoscaling_policy_terminate_intance.arn]
+  alarm_actions     = [aws_autoscaling_policy.autoscaling_policy_terminate_instance.arn]
 }
