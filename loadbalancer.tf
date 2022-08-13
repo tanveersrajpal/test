@@ -2,11 +2,11 @@ resource "aws_lb" "default" {
   name               = "clearpoint-lb-web"
   load_balancer_type = "application"
   subnets            = [aws_subnet.prod-subnet-public-1.id, aws_subnet.prod-subnet-public-2.id]
-  security_groups    = [aws_security_group.public_security_group_ECS.id]
+  security_groups    = [aws_security_group.public_security_group_LB.id]
 }
 
-resource "aws_lb_target_group" "hello_world" {
-  name        = "example-target-group"
+resource "aws_lb_target_group" "tg-clearpoint-lb-web" {
+  name        = "tg-clearpoint-lb-web"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc-main.id
@@ -22,13 +22,13 @@ resource "aws_lb_target_group" "hello_world" {
   }
 }
 
-resource "aws_lb_listener" "hello_world" {
+resource "aws_lb_listener" "listner-clearpoint-lb-web" {
   load_balancer_arn = aws_lb.default.id
   port              = 3000
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_lb_target_group.hello_world.id
+    target_group_arn = aws_lb_target_group.tg-clearpoint-lb-web.id
     type             = "forward"
   }
 }

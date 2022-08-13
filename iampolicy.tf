@@ -4,7 +4,7 @@ data "aws_iam_policy_document" "ecs_agent" {
 
     principals {
       type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com","ec2.amazonaws.com"]
+      identifiers = ["ecs-tasks.amazonaws.com", "ec2.amazonaws.com"]
     }
   }
 }
@@ -17,7 +17,7 @@ resource "aws_iam_role" "ecs_agent" {
 
 resource "aws_iam_role_policy_attachment" "ecs_agent" {
   role       = aws_iam_role.ecs_agent.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+  policy_arn = var.aws_iam_policy_arn
 }
 
 resource "aws_iam_instance_profile" "ecs_agent" {

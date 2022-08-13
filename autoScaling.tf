@@ -1,10 +1,10 @@
 resource "aws_launch_configuration" "ecs_launch_config" {
-  image_id             = "ami-0a5d07e2b337abadb"
+  image_id             = var.ec2_image_id
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
-  security_groups      = [aws_security_group.public_security_group_ECS.id]
-  user_data            = "#!/bin/bash\necho ECS_CLUSTER=clearpoint-main-cluster-listapi-appp >> /etc/ecs/ecs.config"
-  instance_type        = "t2.micro"
-  key_name             = "strikingimpact"
+  security_groups      = [aws_security_group.public_security_group_ASG.id]
+  user_data            = var.ec2_user_data
+  instance_type        = var.ec2_instance_type
+  key_name             = var.ec2_keypair_name
 }
 
 resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
@@ -17,8 +17,6 @@ resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
   max_size                  = 10
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  
-
 }
 
 resource "aws_autoscaling_attachment" "autoscaling_group_association" {
@@ -56,7 +54,7 @@ resource "aws_cloudwatch_metric_alarm" "autoscaling_policy_action_cpu_alarm_up" 
     AutoScalingGroupName = "${aws_autoscaling_group.failure_analysis_ecs_asg.name}"
   }
 
-  alarm_description = "This metric monitor EC2 instance CPU utilization"
+  alarm_description = "Scale up by 1 instance if CPU threshold reaches 70% or above average"
   alarm_actions     = [aws_autoscaling_policy.autoscaling_policy_add_instance.arn]
 }
 
@@ -74,6 +72,6 @@ resource "aws_cloudwatch_metric_alarm" "autoscaling_policy_action_cpu_alarm_down
     AutoScalingGroupName = "${aws_autoscaling_group.failure_analysis_ecs_asg.name}"
   }
 
-  alarm_description = "This metric monitor EC2 instance CPU utilization"
+  alarm_description = "Scale down by 1 instance if CPU threshold reaches 10% or lower average"
   alarm_actions     = [aws_autoscaling_policy.autoscaling_policy_terminate_intance.arn]
 }
