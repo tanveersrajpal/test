@@ -17,6 +17,13 @@ resource "aws_autoscaling_group" "main-autoscaling-group" {
   max_size                  = 10
   health_check_grace_period = 300
   health_check_type         = "EC2"
+
+  lifecycle {
+    ignore_changes = [
+      load_balancers,
+      target_group_arns
+    ]
+  }
 }
 
 resource "aws_autoscaling_attachment" "autoscaling_group_association" {
