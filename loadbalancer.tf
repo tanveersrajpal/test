@@ -2,7 +2,7 @@ resource "aws_lb" "default" {
   name               = "clearpoint-lb-web"
   load_balancer_type = "application"
   subnets            = [aws_subnet.prod-subnet-public-1.id, aws_subnet.prod-subnet-public-2.id]
-  security_groups    = [aws_security_group.public_security_group_LB.id]
+  security_groups    = [aws_security_group.public-security-group-LB.id]
 }
 
 resource "aws_lb_target_group" "tg-clearpoint-lb-web" {

@@ -30,8 +30,8 @@ resource "aws_security_group" "public-security-group-LB" {
   }
 }
 
-resource "aws_security_group" "public-security-group-ASG" {
-  name        = "public-security-group-asg"
+resource "aws_security_group" "private-security-group-ASG" {
+  name        = "private-security-group-asg"
   description = "Allow TLS inbound traffic"
   vpc_id      = aws_vpc.vpc-main.id
 

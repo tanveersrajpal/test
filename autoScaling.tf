@@ -1,7 +1,7 @@
 resource "aws_launch_configuration" "ecs_launch_config" {
   image_id             = var.ec2_image_id
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
-  security_groups      = [aws_security_group.public_security_group_ASG.id]
+  security_groups      = [aws_security_group.private-security-group-ASG.id]
   user_data            = var.ec2_user_data
   instance_type        = var.ec2_instance_type
   key_name             = var.ec2_keypair_name
