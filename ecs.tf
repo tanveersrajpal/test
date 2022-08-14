@@ -42,11 +42,11 @@ resource "aws_ecs_cluster" "clearpoint-main-cluster-listapi-app" {
 #--------------------------------------------------------------------------
 #Creating Elastic Container Service - CLUSTER SERVICE
 resource "aws_ecs_service" "clearpoint-cluster-service-listapi-app" {
-  name            = "clearpoint-cluster-service-listapi-app"
-  cluster         = aws_ecs_cluster.clearpoint-main-cluster-listapi-app.id
-  task_definition = aws_ecs_task_definition.clearpoint_taskdefinition.id
-  desired_count   = 2
-  launch_type     = "EC2"
+  name                               = "clearpoint-cluster-service-listapi-app"
+  cluster                            = aws_ecs_cluster.clearpoint-main-cluster-listapi-app.id
+  task_definition                    = aws_ecs_task_definition.clearpoint_taskdefinition.id
+  desired_count                      = 2
+  launch_type                        = "EC2"
   deployment_minimum_healthy_percent = 50
 }
 

@@ -1,3 +1,4 @@
+#To be used by AutoScaling Group for deployment of new EC2 instances
 resource "aws_launch_configuration" "ecs_launch_config" {
   image_id             = var.ec2_image_id
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
@@ -26,6 +27,7 @@ resource "aws_autoscaling_group" "main-autoscaling-group" {
   }
 }
 
+#Attach Autoscaling LB Target Group
 resource "aws_autoscaling_attachment" "autoscaling_group_association-frontend" {
   autoscaling_group_name = aws_autoscaling_group.main-autoscaling-group.id
   lb_target_group_arn    = aws_lb_target_group.tg-clearpoint-lb-web-frontend.arn
@@ -51,6 +53,7 @@ resource "aws_autoscaling_policy" "autoscaling_policy_terminate_instance" {
   cooldown               = 300
 }
 
+#Configure CloudWatch metrics with Action
 resource "aws_cloudwatch_metric_alarm" "autoscaling_policy_action_cpu_alarm_up" {
   alarm_name          = "web_cpu_alarm_up"
   comparison_operator = "GreaterThanOrEqualToThreshold"
