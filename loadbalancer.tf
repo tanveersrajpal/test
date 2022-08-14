@@ -20,11 +20,6 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-frontend" {
     timeout             = "3"
     unhealthy_threshold = "2"
   }
-  stickiness {
-    enabled  = true
-    type     = "lb_cookie"
-    cookie_duration = 600
-  }
 }
 resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
   name        = "tg-clearpoint-lb-web-backend"
@@ -41,11 +36,6 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
     timeout             = "3"
     unhealthy_threshold = "2"
     path                = "/api/todoItems"
-  }
-  stickiness {
-    enabled  = true
-    type     = "lb_cookie"
-    cookie_duration = 600
   }
 }
 resource "aws_lb_listener" "listner-clearpoint-lb-web-frontend" {
