@@ -21,7 +21,7 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-frontend" {
     unhealthy_threshold = "2"
   }
   stickiness {
-    enabled         = false
+    enabled         = true
     type            = "lb_cookie"
     cookie_duration = 600
   }
@@ -43,7 +43,7 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
     path                = "/api/todoItems"
   }
   stickiness {
-    enabled         = false
+    enabled         = true
     type            = "lb_cookie"
     cookie_duration = 600
   }
