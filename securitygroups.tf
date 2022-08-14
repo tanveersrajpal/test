@@ -52,6 +52,15 @@ resource "aws_security_group" "private-security-group-ASG" {
     ]
   }
   ingress {
+    description = "TLS from VPC"
+    from_port   = 3002
+    to_port     = 3002
+    protocol    = "tcp"
+    security_groups = [
+      "${aws_security_group.public-security-group-LB.id}"
+    ]
+  }
+  ingress {
     description = "SSH"
     from_port   = 22
     to_port     = 22
