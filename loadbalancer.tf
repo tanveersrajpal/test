@@ -21,12 +21,13 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-frontend" {
     unhealthy_threshold = "2"
   }
   stickiness {
-    enabled = true
-    type    = "source_ip"
+    enabled  = true
+    type     = "lb_cookie"
+    duration = 600
   }
 }
 resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
-  name        = "tg-clearpoint-lb-web-frontend"
+  name        = "tg-clearpoint-lb-web-backend"
   port        = 3002
   protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc-main.id
@@ -42,8 +43,9 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
     path                = "/api/todoItems"
   }
   stickiness {
-    enabled = true
-    type    = "source_ip"
+    enabled  = true
+    type     = "lb_cookie"
+    duration = 600
   }
 }
 resource "aws_lb_listener" "listner-clearpoint-lb-web-frontend" {
