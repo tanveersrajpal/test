@@ -20,6 +20,31 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-frontend" {
     timeout             = "3"
     unhealthy_threshold = "2"
   }
+  stickiness {
+    enabled = true
+    type    = "source_ip"
+  }
+}
+resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
+  name        = "tg-clearpoint-lb-web-frontend"
+  port        = 3002
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.vpc-main.id
+  target_type = "instance"
+
+  health_check {
+    healthy_threshold   = "3"
+    interval            = "30"
+    protocol            = "HTTP"
+    matcher             = "200"
+    timeout             = "3"
+    unhealthy_threshold = "2"
+    path                = "/api/todoItems"
+  }
+  stickiness {
+    enabled = true
+    type    = "source_ip"
+  }
 }
 resource "aws_lb_listener" "listner-clearpoint-lb-web-frontend" {
   load_balancer_arn = aws_lb.default.id
@@ -37,7 +62,7 @@ resource "aws_lb_listener" "listner-clearpoint-lb-web-backend" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_lb_target_group.tg-clearpoint-lb-web-frontend.id
+    target_group_arn = aws_lb_target_group.tg-clearpoint-lb-web-backend.arn
     type             = "forward"
   }
 }

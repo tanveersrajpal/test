@@ -26,9 +26,13 @@ resource "aws_autoscaling_group" "main-autoscaling-group" {
   }
 }
 
-resource "aws_autoscaling_attachment" "autoscaling_group_association" {
+resource "aws_autoscaling_attachment" "autoscaling_group_association-frontend" {
   autoscaling_group_name = aws_autoscaling_group.main-autoscaling-group.id
   lb_target_group_arn    = aws_lb_target_group.tg-clearpoint-lb-web-frontend.arn
+}
+resource "aws_autoscaling_attachment" "autoscaling_group_association-backend" {
+  autoscaling_group_name = aws_autoscaling_group.main-autoscaling-group.id
+  lb_target_group_arn    = aws_lb_target_group.tg-clearpoint-lb-web-backend.arn
 }
 
 resource "aws_autoscaling_policy" "autoscaling_policy_add_instance" {
