@@ -38,13 +38,23 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
   }
 }
 
-resource "aws_lb_listener" "listner-clearpoint-lb-web" {
+resource "aws_lb_listener" "listner-clearpoint-lb-web-frontend" {
   load_balancer_arn = aws_lb.default.id
   port              = 3000
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_lb_target_group.tg-clearpoint-lb-web.id
+    target_group_arn = aws_lb_target_group.tg-clearpoint-lb-web-frontend.id
+    type             = "forward"
+  }
+}
+resource "aws_lb_listener" "listner-clearpoint-lb-web-backend" {
+  load_balancer_arn = aws_lb.default.id
+  port              = 3002
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = aws_lb_target_group.tg-clearpoint-lb-web-backend.id
     type             = "forward"
   }
 }
