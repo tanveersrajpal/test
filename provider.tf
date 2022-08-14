@@ -4,7 +4,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     # Replace this with your bucket name!
-    bucket         = "clearpoint-tfstate-backend"
+    bucket         = "clearpoint-s3-bucket-listapptest"
     key            = "state/terraform.tfstate"
     region         = "ap-southeast-2"
   }
