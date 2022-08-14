@@ -5,9 +5,25 @@ resource "aws_lb" "default" {
   security_groups    = [aws_security_group.public-security-group-LB.id]
 }
 
-resource "aws_lb_target_group" "tg-clearpoint-lb-web" {
-  name        = "tg-clearpoint-lb-web"
+resource "aws_lb_target_group" "tg-clearpoint-lb-web-frontend" {
+  name        = "tg-clearpoint-lb-web-frontend"
   port        = 3000
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.vpc-main.id
+  target_type = "instance"
+
+  health_check {
+    healthy_threshold   = "3"
+    interval            = "30"
+    protocol            = "HTTP"
+    matcher             = "200"
+    timeout             = "3"
+    unhealthy_threshold = "2"
+  }
+}
+resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
+  name        = "tg-clearpoint-lb-web-backend"
+  port        = 3002
   protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc-main.id
   target_type = "instance"
