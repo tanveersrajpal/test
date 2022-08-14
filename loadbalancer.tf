@@ -23,7 +23,7 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-frontend" {
   stickiness {
     enabled  = true
     type     = "lb_cookie"
-    duration = 600
+    cookie_duration = 600
   }
 }
 resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
@@ -45,7 +45,7 @@ resource "aws_lb_target_group" "tg-clearpoint-lb-web-backend" {
   stickiness {
     enabled  = true
     type     = "lb_cookie"
-    duration = 600
+    cookie_duration = 600
   }
 }
 resource "aws_lb_listener" "listner-clearpoint-lb-web-frontend" {
